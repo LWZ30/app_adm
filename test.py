@@ -1,21 +1,21 @@
 import ToMysql
-import filecache
+from filecache import filecache
 
 keys = ToMysql.query_mysql("select * from proj_av join projects on projects.proj_id = proj_av.proj_id join attributes on attributes.av_id = proj_av.av_id");
 keyMap = {}
 for key in keys:
-    keyMap[key['proj_av_id']] = key
+    keyMap[str(key['proj_av_id'])] = key
 
 @filecache(60)
 def user_profile(user_id):
-    data = ToMysql.query_mysql("select * from proj_av where usr_id = '{0}'".format(user_id))
+    data = ToMysql.query_mysql("select * from users where usr_id = '{0}'".format(user_id))
     user = {}
     for item in data:
         proj_name = keyMap[item['proj_av_id']]['proj_name']
         av_name = keyMap[item['proj_av_id']]['av_name']
         if proj_name not in user:
             user[proj_name] = {}
-        user[proj_name][av_name]=item['value']
+        user[proj_name][av_name] = item['av_value']
     return user
 
 @filecache(60)
@@ -29,5 +29,5 @@ def project_users(proj_id):
 
     return result
 
-p = project_users(1)
+p = project_users(2)
 print(p)

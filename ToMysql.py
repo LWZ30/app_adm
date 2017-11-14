@@ -7,7 +7,8 @@ def query_mysql(sql): # query SQL语句
     # 打开数据库连接
     db = pymysql.connect("60.30.156.148", "root", "bairiyishanjin", "app_adm", charset="utf8")
     # 使用 cursor() 方法创建一个游标对象 cursor
-    cursor = db.cursor()
+    # cursor = db.cursor()
+    cursor = db.cursor(pymysql.cursors.DictCursor)
     try:
         # 使用 execute()  方法执行 SQL 查询
         cursor.execute(sql)
